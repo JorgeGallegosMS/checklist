@@ -24,57 +24,73 @@ def list_all_items():
 
 def mark_completed(index):
     item = checklist[index]
-    if item[0] != "√":
-        checked = "√" + checklist[index]
-        update(index, checked)
-        return item
+    if index not in range(len(checklist)):
+        print("Error: Item number {} does not exist\n".format(index))
     else:
-        item.pop(0)
-        return item
+        # check item if unchecked
+        if item[0] != "√":
+            checked = "√" + checklist[index]
+            update(index, checked)
+            print("{} was checked\n".format(item))
+            return item
+        # uncheck checked item
+        else:
+            item = item[1:]
+            update(index, item)
+            print("{} was unchecked\n".format(item))
+            return item
 
 def select(function_code):
     # Create item
     if function_code.upper() == 'C':
-        input_item = user_input("Input item: ")
+        input_item = user_input("New item: ")
         create(input_item)
+        list_all_items()
 
     # Read item
     elif function_code.upper() == 'R':
-        item_index = int(user_input("Index number? "))
+        item_index = int(user_input("Item number? "))
 
         if item_index not in range(len(checklist)):
-            print("Error: Invalid index\n")
+            print("Error: Item number {} does not exist\n".format(index))
         else:
             print(read(item_index))
             print("\n")
 
     # Print all items
     elif function_code.upper() == "P":
-        list_all_items()
+        if len(checklist) > 0:
+            list_all_items()
+        else:
+            print("No items in the list\n")
 
     elif function_code.upper() == "U":
         list_all_items()
-        item_index = int(user_input("Which index would you like to update? "))
+        item_index = int(user_input("Which item number would you like to update? "))
         if item_index not in range(len(checklist)):
-            print("Erorr: {} is not a valid index\n".format(item_index))
+            print("Error: Item number {} does not exist\n".format(index))
             return True
         new_item = user_input("New item: ")
         update(item_index, new_item)
         list_all_items()
 
+    # Delete an item
     elif function_code.upper() == "D":
         list_all_items()
-        item_index = int(user_input("What index would you like to delete?"))
+        item_index = int(user_input("What item number would you like to delete?"))
 
         if item_index not in range(len(checklist)):
-            print("Error: Invalid index\n")
+            print("Error: Item number {} does not exist\n".format(index))
         else:
             removed = destroy(item_index)
             print("{} has been removed from the list\n".format(removed))
             list_all_items()
 
+    # Mark an item as complete
     elif function_code.upper() == "M":
-        mark_completed()
+        index = int(input("What item number would you like to mark/unmark?"))
+        mark_completed(index)
+        list_all_items()
 
     elif function_code.upper() == "Q":
         return False
@@ -89,12 +105,14 @@ def user_input(prompt):
     return user_input
 
 def test():
-    select("C")
+    select("c")
     list_all_items()
-    select("R")
+    select("c")
+    list_all_items()
+    select("m")
     list_all_items()
 
-#test()
+# test()
 
 running = True
 
